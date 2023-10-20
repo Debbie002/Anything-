@@ -1,6 +1,3 @@
-
-
- 
 const express = require("express");
 const router = express.Router();
 
@@ -9,15 +6,25 @@ const router = express.Router();
  const shoppingLists = [
     {
     item: "perfume",
-    item: "mama's jean",
- 
-    item3: "Roll on",
+    price: 3500
+    },
 
-    item4: "lip gloss"
-    }
+    {
+      item: "mama's jean",
+      price: 7000
+    },
+    {
+      item: "Roll on",
+      price: 1500
+    }, 
+
+    {item: "lip gloss", 
+    price: 1000
+   }
+   
+    
  ];
 
- var id = "";
 
  //to get
 
@@ -32,27 +39,35 @@ const router = express.Router();
     return res.json("Done");
  })
 
- //GET/list/:id
+ //GET/list/:item
+
+ router.get("/list/:item", (req, res) =>{
+   const itemId = req.params.item;
+   const item = shoppingLists.find((i) => i.item === itemId);
+   return res.json(item);
+ } );
 
 
- router.get("/list/:id", (req, res) =>{
-    const getId = shoppingLists.find(val => val.id === Number(req.params.id));
-    return res.json(getId)  
+// To Patch
+
+ router.patch("/list/:item", (req, res) =>{
+   const itemId = req.params.item;
+   const item = shoppingLists.find((i) => i.item === itemId);
+   item.item = req.body.item;
+   item.price = req.body.price;
+   return res.json("Patched");
  });
 
 
- router.patch("/list/:id", (req, res) => { 
-    const toPatch = shoppingLists.find(val => val.id === Number(req.params.id)); 
-    toPatch.name = req.body.name; 
-    return res.json("Patched");
- }); 
+//To delete
+ router.delete("/list/:item", (req, res) =>{
+   const itemId = req.params.item;
+   const itemIndex = shoppingLists.findIndex((i) => i.item === itemId);
+   shoppingLists.splice(itemIndex, 1);
+   return res.json("Deleted");
 
+});
 
-    router.delete("/list/:id", (req, res) => { 
-    const toDelete = shoppingLists.findIndex(val => val.id === Number(req.params.id)); 
-    shoppingLists.splice(toDelete, 1);
-     return res.json("Deleted");
-     }); 
 
 
 
